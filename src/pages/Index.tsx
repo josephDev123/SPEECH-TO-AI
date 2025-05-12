@@ -1,0 +1,187 @@
+import React, { useState, useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { useSpeechRecognition } from "@/utils/useSpeechRecognition";
+import RecorderControl from "@/components/RecorderControl";
+import TranscriptDisplay from "@/components/TranscriptDisplay";
+import AIResponse from "@/components/AIResponse";
+import SavedTranscripts, { TranscriptItem } from "@/components/SavedTranscripts";
+import { toast } from "sonner";
+import { Save, Send } from "lucide-react";
+import { getAIResponse } from "@/utils/aiService";
+
+const Index = () => {
+  const { isRecording, transcript, error, startRecording, stopRecording } = useSpeechRecognition();
+  const [savedTranscripts, setSavedTranscripts] = useState<TranscriptItem[]>([]);
+  const [aiResponse, setAiResponse] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  // Load saved transcripts from localStorage on component mount
+  useEffect(() => {
+    const savedItems = localStorage.getItem("savedTranscripts");
+    if (savedItems) {
+      try {
+        const parsedItems = JSON.parse(savedItems).map((item: any) => ({
+          ...item,
+          date: new Date(item.date),
+        }));
+        setSavedTranscripts(parsedItems);
+      } catch (err) {
+        console.error("Error parsing saved transcripts:", err);
+        localStorage.removeItem("savedTranscripts");
+      }
+    }
+  }, []);
+
+  // Save transcripts to localStorage whenever they change
+  useEffect(() => {
+    if (savedTranscripts.length > 0) {
+      localStorage.setItem("savedTranscripts", JSON.stringify(savedTranscripts));
+    }
+  }, [savedTranscripts]);
+
+  // Show error toast if speech recognition errors
+  useEffect(() => {
+    if (error) {
+      toast(error);
+    }
+  }, [error]);
+
+  const saveTranscript = () => {
+    if (!transcript.trim()) {
+      toast("Nothing to save", {
+        description: "Record something first!",
+      });
+      return;
+    }
+
+    const newTranscript: TranscriptItem = {
+      id: uuidv4(),
+      text: transcript,
+      date: new Date(),
+    };
+
+    setSavedTranscripts((prev) => [newTranscript, ...prev]);
+    toast("Transcript saved!", {
+      description: "Your transcript has been saved successfully.",
+    });
+  };
+
+  const deleteTranscript = (id: string) => {
+    setSavedTranscripts((prev) => {
+      const filtered = prev.filter((item) => item.id !== id);
+      if (filtered.length === 0) {
+        localStorage.removeItem("savedTranscripts");
+      }
+      return filtered;
+    });
+    toast("Transcript deleted");
+  };
+
+  const askAI = async () => {
+    if (!transcript.trim()) {
+      toast("Nothing to ask", {
+        description: "Record a question first!",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await getAIResponse(transcript);
+      setAiResponse(response);
+      toast("AI response received!");
+    } catch (error) {
+      console.error("Error getting AI response:", error);
+      toast("Failed to get AI response", {
+        description: "Please try again later.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
+      <div className="container mx-auto max-w-4xl px-4 py-8 md:py-12">
+        <header className="mb-8 text-center">
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900 md:text-4xl">
+            Talk to AI
+          </h1>
+          <p className="mt-2 text-lg text-muted-foreground">
+            Ask questions with your voice and get AI-powered answers
+          </p>
+        </header>
+
+        <div className="grid gap-8 md:grid-cols-2">
+          <div className="flex flex-col gap-6">
+            <div className="rounded-lg border bg-card p-6 shadow-sm">
+              <h2 className="mb-4 text-xl font-semibold">Ask a Question</h2>
+              <TranscriptDisplay 
+                transcript={transcript} 
+                isRecording={isRecording} 
+                className="mb-6" 
+              />
+              <div className="flex items-center justify-between">
+                <RecorderControl
+                  isRecording={isRecording}
+                  onStartRecording={startRecording}
+                  onStopRecording={stopRecording}
+                  transcript={transcript}
+                />
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    onClick={saveTranscript}
+                    disabled={!transcript}
+                  >
+                    <Save className="mr-2 h-4 w-4" />
+                    Save
+                  </Button>
+                  <Button
+                    variant="default"
+                    onClick={askAI}
+                    disabled={!transcript || isLoading}
+                    className="bg-blue-500 hover:bg-blue-600"
+                  >
+                    <Send className="mr-2 h-4 w-4" />
+                    Ask AI
+                  </Button>
+                </div>
+              </div>
+            </div>
+            
+            <AIResponse 
+              response={aiResponse} 
+              isLoading={isLoading} 
+              className="md:hidden"
+            />
+          </div>
+
+          <div className="flex flex-col gap-6">
+            <div className="hidden md:block">
+              <AIResponse 
+                response={aiResponse} 
+                isLoading={isLoading} 
+              />
+            </div>
+            <SavedTranscripts 
+              transcripts={savedTranscripts} 
+              onDelete={deleteTranscript} 
+            />
+          </div>
+        </div>
+
+        <Separator className="my-8" />
+
+        <footer className="text-center text-sm text-muted-foreground">
+          <p>Created with Lovable - Speech to AI App</p>
+          <p className="mt-1">Microphone access required for functionality</p>
+        </footer>
+      </div>
+    </div>
+  );
+};
+
+export default Index;
