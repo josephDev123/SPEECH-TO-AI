@@ -13,8 +13,9 @@ export const useSpeechRecognition = () => {
 
   React.useEffect(() => {
     // Check if browser supports SpeechRecognition
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+
     if (!SpeechRecognition) {
       setError("Speech recognition is not supported in this browser.");
       return;
@@ -23,11 +24,11 @@ export const useSpeechRecognition = () => {
     const recognition = new SpeechRecognition();
     recognition.continuous = true;
     recognition.interimResults = true;
-    recognition.lang = 'en-US';
+    recognition.lang = "en-US";
 
     recognition.onresult = (event: any) => {
-      let interimTranscript = '';
-      let finalTranscript = '';
+      let interimTranscript = "";
+      let finalTranscript = "";
 
       for (let i = event.resultIndex; i < event.results.length; ++i) {
         if (event.results[i].isFinal) {
@@ -41,7 +42,7 @@ export const useSpeechRecognition = () => {
     };
 
     recognition.onerror = (event: any) => {
-      console.error('Speech recognition error', event.error);
+      console.error("Speech recognition error", event.error);
       setError(`Error: ${event.error}`);
       setIsRecording(false);
     };
@@ -69,13 +70,13 @@ export const useSpeechRecognition = () => {
     setError(null);
     setIsRecording(true);
     setTranscript("");
-    
+
     try {
       recognitionRef.current.keepRecording = true;
       recognitionRef.current.start();
     } catch (err) {
-      console.error('Failed to start recording:', err);
-      setError('Failed to start recording');
+      console.error("Failed to start recording:", err);
+      setError("Failed to start recording");
       setIsRecording(false);
     }
   };

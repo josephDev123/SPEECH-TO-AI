@@ -6,14 +6,19 @@ import { useSpeechRecognition } from "@/utils/useSpeechRecognition";
 import RecorderControl from "@/components/RecorderControl";
 import TranscriptDisplay from "@/components/TranscriptDisplay";
 import AIResponse from "@/components/AIResponse";
-import SavedTranscripts, { TranscriptItem } from "@/components/SavedTranscripts";
+import SavedTranscripts, {
+  TranscriptItem,
+} from "@/components/SavedTranscripts";
 import { toast } from "sonner";
 import { Save, Send } from "lucide-react";
 import { getAIResponse } from "@/utils/aiService";
 
 const Index = () => {
-  const { isRecording, transcript, error, startRecording, stopRecording } = useSpeechRecognition();
-  const [savedTranscripts, setSavedTranscripts] = useState<TranscriptItem[]>([]);
+  const { isRecording, transcript, error, startRecording, stopRecording } =
+    useSpeechRecognition();
+  const [savedTranscripts, setSavedTranscripts] = useState<TranscriptItem[]>(
+    []
+  );
   const [aiResponse, setAiResponse] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -37,7 +42,10 @@ const Index = () => {
   // Save transcripts to localStorage whenever they change
   useEffect(() => {
     if (savedTranscripts.length > 0) {
-      localStorage.setItem("savedTranscripts", JSON.stringify(savedTranscripts));
+      localStorage.setItem(
+        "savedTranscripts",
+        JSON.stringify(savedTranscripts)
+      );
     }
   }, [savedTranscripts]);
 
@@ -116,14 +124,14 @@ const Index = () => {
 
         <div className="grid gap-8 md:grid-cols-2">
           <div className="flex flex-col gap-6">
-            <div className="rounded-lg border bg-card p-6 shadow-sm">
+            <div className="rounded-lg border bg-card p-6 shadow-sm ">
               <h2 className="mb-4 text-xl font-semibold">Ask a Question</h2>
-              <TranscriptDisplay 
-                transcript={transcript} 
-                isRecording={isRecording} 
-                className="mb-6" 
+              <TranscriptDisplay
+                transcript={transcript}
+                isRecording={isRecording}
+                className="mb-6"
               />
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between ">
                 <RecorderControl
                   isRecording={isRecording}
                   onStartRecording={startRecording}
@@ -151,24 +159,21 @@ const Index = () => {
                 </div>
               </div>
             </div>
-            
-            <AIResponse 
-              response={aiResponse} 
-              isLoading={isLoading} 
+
+            <AIResponse
+              response={aiResponse}
+              isLoading={isLoading}
               className="md:hidden"
             />
           </div>
 
           <div className="flex flex-col gap-6">
             <div className="hidden md:block">
-              <AIResponse 
-                response={aiResponse} 
-                isLoading={isLoading} 
-              />
+              <AIResponse response={aiResponse} isLoading={isLoading} />
             </div>
-            <SavedTranscripts 
-              transcripts={savedTranscripts} 
-              onDelete={deleteTranscript} 
+            <SavedTranscripts
+              transcripts={savedTranscripts}
+              onDelete={deleteTranscript}
             />
           </div>
         </div>
@@ -176,7 +181,7 @@ const Index = () => {
         <Separator className="my-8" />
 
         <footer className="text-center text-sm text-muted-foreground">
-          <p>Created with Lovable - Speech to AI App</p>
+          <p>Created with Joseph - Speech to AI App</p>
           <p className="mt-1">Microphone access required for functionality</p>
         </footer>
       </div>
