@@ -4,6 +4,8 @@ dotenv.config();
 
 const envSchema = z.object({
   PORT: z.string().min(4).max(5).default("1000"),
+  CHATGPT_SECRET: z.string(),
+  OPENAI_BASEURL: z.string(),
 });
 export type IEnvSchema = z.infer<typeof envSchema>;
 
