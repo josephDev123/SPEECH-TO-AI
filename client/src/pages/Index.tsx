@@ -181,7 +181,7 @@ const Index = () => {
         <Separator className="my-8" />
 
         <footer className="text-center text-sm text-muted-foreground">
-          <p>Created with Joseph - Speech to AI App</p>
+          <p>Created by Joseph - Speech to AI App</p>
           <p className="mt-1">Microphone access required for functionality</p>
         </footer>
       </div>

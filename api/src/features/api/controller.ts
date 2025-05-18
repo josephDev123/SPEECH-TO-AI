@@ -1,12 +1,14 @@
 import { NextFunction, Request, Response } from "express";
 import OpenAI from "openai";
+import { GlobalError } from "../../lib/plugin/GlobalErrorHandler";
 
 export class AI {
   constructor(private readonly GptClient: OpenAI) {}
   async processResponse(req: Request, res: Response, next: NextFunction) {
     try {
       const payload = req.body;
-      const result = await this.GptClient.chat.completions.create({
+
+      const stream = await this.GptClient.chat.completions.create({
         model: "openai/gpt-4.1",
         messages: [
           {
@@ -15,14 +17,58 @@ export class AI {
           },
           {
             role: "user",
-            content: "which country has the most nuclear power?",
+            content: payload,
           },
         ],
+
+        stream: true,
       });
-      res.status(200).json({ msg: result.choices[0].message });
-      return;
+
+      // Set headers to enable streaming
+      res.setHeader("Content-Type", "text/plain");
+      res.setHeader("Transfer-Encoding", "chunked");
+
+      for await (let chunk of stream) {
+        const content = chunk.choices[0]?.delta?.content;
+        if (content) {
+          process.stdout.write(content || "");
+          res.write(content);
+        }
+      }
+
+      res.end();
     } catch (error) {
-      console.log(error);
+      if (error instanceof GlobalError) {
+        if (error.operational) {
+          next(
+            new GlobalError(
+              error.name,
+              error.message,
+              error.statusCode,
+              error.operational
+            )
+          );
+          return;
+        } else {
+          next(
+            new GlobalError(
+              error.name,
+              "Something went wrong",
+              error.statusCode,
+              false
+            )
+          );
+          return;
+        }
+      }
+
+      if (error instanceof Error) {
+        next(new GlobalError(error.name, error?.message, 500, false));
+        return;
+      }
+
+      next(new GlobalError("UnknownError", "Something went wrong", 500, false));
+      return;
     }
   }
 }
