@@ -7,6 +7,7 @@ export class AI {
   async processResponse(req: Request, res: Response, next: NextFunction) {
     try {
       const payload = req.body;
+      console.log("payload", payload);
 
       const stream = await this.GptClient.chat.completions.create({
         model: "openai/gpt-4.1",
@@ -17,7 +18,7 @@ export class AI {
           },
           {
             role: "user",
-            content: payload,
+            content: payload.transcript,
           },
         ],
 
@@ -27,6 +28,7 @@ export class AI {
       // Set headers to enable streaming
       res.setHeader("Content-Type", "text/plain");
       res.setHeader("Transfer-Encoding", "chunked");
+      res.setHeader("Cache-Control", "no-cache");
 
       for await (let chunk of stream) {
         const content = chunk.choices[0]?.delta?.content;

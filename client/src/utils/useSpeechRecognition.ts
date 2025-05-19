@@ -26,19 +26,25 @@ export const useSpeechRecognition = () => {
     recognition.interimResults = true;
     recognition.lang = "en-US";
 
+    let fullTranscript = " ";
     recognition.onresult = (event: any) => {
-      let interimTranscript = "";
-      let finalTranscript = "";
+      let interimTranscript = " ";
+      // let finalTranscript = "";
 
       for (let i = event.resultIndex; i < event.results.length; ++i) {
-        if (event.results[i].isFinal) {
-          finalTranscript += event.results[i][0].transcript;
-        } else {
-          interimTranscript += event.results[i][0].transcript;
+        const result = event.results[i];
+        if (result.isFinal) {
+          fullTranscript += result[0].transcript;
+          // } else {
+          //   interimTranscript += result[0].transcript;
         }
       }
 
-      setTranscript(finalTranscript || interimTranscript);
+      // fullTranscript = interimTranscript + fullTranscript;
+      const combinedTranscript = fullTranscript + interimTranscript;
+      console.log(fullTranscript);
+      setTranscript(fullTranscript);
+      // setTranscript(finalTranscript || interimTranscript);
     };
 
     recognition.onerror = (event: any) => {

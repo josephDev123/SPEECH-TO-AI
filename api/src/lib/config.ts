@@ -7,6 +7,7 @@ const envSchema = z.object({
   CHATGPT_SECRET: z.string(),
   OPENAI_BASEURL: z.string(),
   NODE_ENV: z.enum(["dev", "prod"]),
+  CORS_ORIGIN: z.string().url(),
 });
 export type IEnvSchema = z.infer<typeof envSchema>;
 

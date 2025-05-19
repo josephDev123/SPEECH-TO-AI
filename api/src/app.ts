@@ -1,4 +1,5 @@
 import express, { Request, Response } from "express";
+import cors from "cors";
 import { AIRouter } from "./features/api/AI-Route";
 import { IEnvSchema } from "./lib/config";
 import OpenAI from "openai";
@@ -12,7 +13,7 @@ export type options = {
 export async function App(options: options) {
   const app = express();
   app.use(express.json());
-
+  app.use(cors({ origin: options.config.CORS_ORIGIN }));
   app.use("/api", AIRouter(options));
 
   app.use("/", (req: Request, res: Response) => {

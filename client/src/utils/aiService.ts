@@ -1,25 +1,42 @@
-
 // This is a simple mock AI service for demo purposes
 // In a real app, you would connect this to an actual AI API like OpenAI
 
-export const getAIResponse = async (question: string): Promise<string> => {
-  // Simulate API delay
-  await new Promise((resolve) => setTimeout(resolve, 1500));
-  
-  // For demo purposes, providing canned responses based on keywords
-  const questionLower = question.toLowerCase();
-  
-  if (questionLower.includes("weather")) {
-    return "The weather today is sunny with a high of 75°F.";
-  } else if (questionLower.includes("time")) {
-    return `The current time is ${new Date().toLocaleTimeString()}.`;
-  } else if (questionLower.includes("name")) {
-    return "I'm an AI assistant integrated with your Talk to Type application.";
-  } else if (questionLower.includes("help")) {
-    return "I can answer questions about various topics. Just speak clearly and I'll do my best to respond.";
-  } else if (questionLower.includes("hello") || questionLower.includes("hi")) {
-    return "Hello! How can I assist you today?";
-  } else {
-    return "I understand your question. In a complete implementation, I would connect to a real AI API to provide accurate answers to your queries.";
+import { on } from "events";
+
+export const getAIResponse = async (
+  question: string,
+  onChuck: (value: string) => void
+) => {
+  console.log(question);
+  if (!question) {
+    throw new Error("Question is required");
+  }
+
+  try {
+    const reader = await fetch("http://localhost:1000/api/ai/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ transcript: question }),
+    });
+
+    const res = reader.body.getReader();
+    const decoder = new TextDecoder("utf-8");
+    // let result = "";
+
+    while (true) {
+      const { done, value } = await res.read();
+      if (done) break;
+
+      const chunk = decoder.decode(value, { stream: true });
+      // result += chunk;
+      onChuck(chunk);
+      console.log(chunk); // <-- Handle streamed chunk here
+    }
+    // return result;
+  } catch (error) {
+    console.error("Error fetching AI response:", error);
+    throw new Error("Failed to fetch AI response");
   }
 };

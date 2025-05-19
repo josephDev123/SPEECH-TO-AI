@@ -96,9 +96,13 @@ const Index = () => {
     }
 
     setIsLoading(true);
+    setAiResponse("");
     try {
-      const response = await getAIResponse(transcript);
-      setAiResponse(response);
+      const response = await getAIResponse(transcript, (chunk) => {
+        setIsLoading(false);
+        setAiResponse((prev) => prev + chunk);
+      });
+
       toast("AI response received!");
     } catch (error) {
       console.error("Error getting AI response:", error);
