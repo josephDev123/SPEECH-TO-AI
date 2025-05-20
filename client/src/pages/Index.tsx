@@ -10,12 +10,18 @@ import SavedTranscripts, {
   TranscriptItem,
 } from "@/components/SavedTranscripts";
 import { toast } from "sonner";
-import { Save, Send } from "lucide-react";
+import { Save, Send, TicketX } from "lucide-react";
 import { getAIResponse } from "@/utils/aiService";
 
 const Index = () => {
-  const { isRecording, transcript, error, startRecording, stopRecording } =
-    useSpeechRecognition();
+  const {
+    clearTranscript,
+    isRecording,
+    transcript,
+    error,
+    startRecording,
+    stopRecording,
+  } = useSpeechRecognition();
   const [savedTranscripts, setSavedTranscripts] = useState<TranscriptItem[]>(
     []
   );
@@ -114,12 +120,18 @@ const Index = () => {
     }
   };
 
+  if (transcript && transcript.includes("send it to AI")) {
+    askAI();
+    clearTranscript();
+    stopRecording();
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       <div className="container mx-auto max-w-4xl px-4 py-8 md:py-12">
         <header className="mb-8 text-center">
           <h1 className="text-3xl font-bold tracking-tight text-gray-900 md:text-4xl">
-            Talk to AI
+            Speed(Voice) to AI
           </h1>
           <p className="mt-2 text-lg text-muted-foreground">
             Ask questions with your voice and get AI-powered answers
@@ -129,12 +141,20 @@ const Index = () => {
         <div className="grid gap-8 md:grid-cols-2">
           <div className="flex flex-col gap-6">
             <div className="rounded-lg border bg-card p-6 shadow-sm ">
-              <h2 className="mb-4 text-xl font-semibold">Ask a Question</h2>
+              <h2 className="mb-4 text-xl font-semibold">
+                Voice your Question
+              </h2>
               <TranscriptDisplay
                 transcript={transcript}
                 isRecording={isRecording}
-                className="mb-6"
+                className="mb-4"
               />
+              <p className="text-xs text-green-600 mb-2">
+                <b className="text-red-400 font-bold border-b mr-1 border-b-red-300">
+                  Notice:
+                </b>
+                Say 'send it to AI' in transcript to get a response
+              </p>
               <div className="flex items-center justify-between ">
                 <RecorderControl
                   isRecording={isRecording}
@@ -144,14 +164,23 @@ const Index = () => {
                 />
                 <div className="flex gap-2">
                   <Button
+                    title="Save Transcript"
                     variant="outline"
                     onClick={saveTranscript}
                     disabled={!transcript}
                   >
-                    <Save className="mr-2 h-4 w-4" />
-                    Save
+                    <Save className=" h-4 w-4" />
                   </Button>
                   <Button
+                    title="Clear Transcript"
+                    variant="outline"
+                    onClick={clearTranscript}
+                    disabled={!transcript}
+                  >
+                    <TicketX className=" h-2 w-2" />
+                  </Button>
+
+                  {/* <Button
                     variant="default"
                     onClick={askAI}
                     disabled={!transcript || isLoading}
@@ -159,7 +188,7 @@ const Index = () => {
                   >
                     <Send className="mr-2 h-4 w-4" />
                     Ask AI
-                  </Button>
+                  </Button> */}
                 </div>
               </div>
             </div>

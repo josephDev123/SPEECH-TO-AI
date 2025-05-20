@@ -28,23 +28,15 @@ export const useSpeechRecognition = () => {
 
     let fullTranscript = " ";
     recognition.onresult = (event: any) => {
-      let interimTranscript = " ";
-      // let finalTranscript = "";
-
       for (let i = event.resultIndex; i < event.results.length; ++i) {
         const result = event.results[i];
         if (result.isFinal) {
           fullTranscript += result[0].transcript;
-          // } else {
-          //   interimTranscript += result[0].transcript;
         }
       }
 
-      // fullTranscript = interimTranscript + fullTranscript;
-      const combinedTranscript = fullTranscript + interimTranscript;
       console.log(fullTranscript);
       setTranscript(fullTranscript);
-      // setTranscript(finalTranscript || interimTranscript);
     };
 
     recognition.onerror = (event: any) => {
@@ -95,7 +87,12 @@ export const useSpeechRecognition = () => {
     }
   };
 
+  const clearTranscript = () => {
+    setTranscript("");
+  };
+
   return {
+    clearTranscript,
     isRecording,
     transcript,
     error,

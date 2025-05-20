@@ -1,4 +1,3 @@
-
 import React from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -29,7 +28,7 @@ const AIResponse: React.FC<AIResponseProps> = ({
               <span className="ml-2 text-muted-foreground">Thinking...</span>
             </div>
           ) : response ? (
-            <p className="text-lg leading-relaxed">{response}</p>
+            <pre className="text-lg leading-relaxed">{response}</pre>
           ) : (
             <div className="flex h-full items-center justify-center text-muted-foreground">
               <p>Ask a question to get an AI response</p>
