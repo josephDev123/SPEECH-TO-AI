@@ -13,7 +13,7 @@ export const getAIResponse = async (
   }
 
   try {
-    const reader = await fetch("http://localhost:1000/api/ai/chat", {
+    const reader = await fetch(`${import.meta.env.VITE_API_HOST}/ai/chat`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
