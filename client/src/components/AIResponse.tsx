@@ -28,7 +28,7 @@ const AIResponse: React.FC<AIResponseProps> = ({
               <span className="ml-2 text-muted-foreground">Thinking...</span>
             </div>
           ) : response ? (
-            <pre className="text-lg leading-relaxed">{response}</pre>
+            <pre className="text-sm text-wrap">{response}</pre>
           ) : (
             <div className="flex h-full items-center justify-center text-muted-foreground">
               <p>Ask a question to get an AI response</p>

@@ -128,7 +128,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
-      <div className="container mx-auto max-w-4xl px-4 py-8 md:py-12">
+      <div className="container mx-auto px-4 py-8 md:py-12">
         <header className="mb-8 text-center">
           <h1 className="text-3xl font-bold tracking-tight text-gray-900 md:text-4xl">
             Speed(Voice) to AI
@@ -149,11 +149,11 @@ const Index = () => {
                 isRecording={isRecording}
                 className="mb-4"
               />
-              <p className="text-xs text-green-600 mb-2">
+              <p className="text-sm text-green-600 mb-2">
                 <b className="text-red-400 font-bold border-b mr-1 border-b-red-300">
                   Notice:
                 </b>
-                Say 'send it to AI' in transcript to get a response
+                Say <b>'send it to AI'</b> in transcript to get a response
               </p>
               <div className="flex items-center justify-between ">
                 <RecorderControl
