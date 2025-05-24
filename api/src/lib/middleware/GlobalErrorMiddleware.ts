@@ -10,7 +10,7 @@ export const createGlobalErrorMiddleware = (
   const devStage = options;
 
   return (err: Error, req: Request, res: Response, next: NextFunction) => {
-    // console.error("error", err);
+    console.error("error", err);
     // console.error("stack", err.stack);
     // console.error("error message", err.message);
 

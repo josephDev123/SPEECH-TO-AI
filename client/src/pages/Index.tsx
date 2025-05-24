@@ -12,6 +12,7 @@ import SavedTranscripts, {
 import { toast } from "sonner";
 import { Save, Send, TicketX } from "lucide-react";
 import { getAIResponse } from "@/utils/aiService";
+import { AxiosErrorHandler } from "@/utils/axiosErrorHandler";
 
 const Index = () => {
   const {
@@ -112,8 +113,9 @@ const Index = () => {
       toast("AI response received!");
     } catch (error) {
       console.error("Error getting AI response:", error);
+      // const errMsg = AxiosErrorHandler(error);
       toast("Failed to get AI response", {
-        description: "Please try again later.",
+        description: error?.message,
       });
     } finally {
       setIsLoading(false);

@@ -21,22 +21,36 @@ export const getAIResponse = async (
       body: JSON.stringify({ transcript: question }),
     });
 
+    // Handle non-2xx responses immediately
+    if (!reader.ok) {
+      const errorText = await reader.text();
+      console.log("json error", errorText);
+
+      try {
+        const json = JSON.parse(errorText);
+        if (json !== null && typeof json === "object" && !Array.isArray(json)) {
+          throw new Error(json.message);
+        }
+        throw new Error(`Server error: ${errorText}`);
+      } catch {
+        throw new Error(`Server responded with ${reader.status}: ${errorText}`);
+      }
+    }
+
     const res = reader.body.getReader();
     const decoder = new TextDecoder("utf-8");
-    // let result = "";
 
     while (true) {
       const { done, value } = await res.read();
       if (done) break;
 
       const chunk = decoder.decode(value, { stream: true });
-      // result += chunk;
+
       onChuck(chunk);
-      console.log(chunk); // <-- Handle streamed chunk here
+      // console.log(chunk);
     }
-    // return result;
   } catch (error) {
     console.error("Error fetching AI response:", error);
-    throw new Error("Failed to fetch AI response");
+    throw new Error(error.message || "Failed to fetch AI response");
   }
 };

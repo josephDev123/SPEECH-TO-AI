@@ -33,7 +33,7 @@ export class AI {
       for await (let chunk of stream) {
         const content = chunk.choices[0]?.delta?.content;
         if (content) {
-          process.stdout.write(content || "");
+          // process.stdout.write(content || "");
           res.write(content);
         }
       }

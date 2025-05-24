@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { options } from "../../app";
+import { options } from "../..";
 import { AI } from "./controller";
 
 export function AIRouter(options: options) {
