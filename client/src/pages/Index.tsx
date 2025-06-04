@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -12,7 +12,8 @@ import SavedTranscripts, {
 import { toast } from "sonner";
 import { Save, Send, TicketX } from "lucide-react";
 import { getAIResponse } from "@/utils/aiService";
-import { AxiosErrorHandler } from "@/utils/axiosErrorHandler";
+import SwitchTheme from "@/components/SwitchTheme";
+import { ThemeContext } from "@/context/Theme";
 
 const Index = () => {
   const {
@@ -28,6 +29,8 @@ const Index = () => {
   );
   const [aiResponse, setAiResponse] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const { theme } = useContext(ThemeContext);
 
   // Load saved transcripts from localStorage on component mount
   useEffect(() => {
@@ -127,12 +130,31 @@ const Index = () => {
     clearTranscript();
     stopRecording();
   }
+  const themeClass =
+    theme === "light"
+      ? "bg-gradient-to-b from-gray-50 to-gray-100"
+      : "bg-gray-900 text-white";
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
+    <div className={`min-h-screen ${themeClass} `}>
+      <div className="flex justify-between p-4">
+        <a
+          href="https://buymeacoffee.com/josephdev"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-28  "
+        >
+          <img src={"/buymeCoffee.png"} alt="" className="" />
+        </a>
+        <SwitchTheme />
+      </div>
       <div className="container mx-auto px-4 py-8 md:py-12">
         <header className="mb-8 text-center">
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900 md:text-4xl">
+          <h1
+            className={`text-3xl font-bold tracking-tight ${
+              theme === "light" && "text-gray-900"
+            }  md:text-4xl`}
+          >
             Speed(Voice) to AI
           </h1>
           <p className="mt-2 text-lg text-muted-foreground">
@@ -140,9 +162,9 @@ const Index = () => {
           </p>
         </header>
 
-        <div className="grid gap-8 md:grid-cols-2">
-          <div className="flex flex-col gap-6">
-            <div className="rounded-lg border bg-card p-6 shadow-sm ">
+        <div className={`grid gap-8 md:grid-cols-2  ${themeClass}`}>
+          <div className={`flex flex-col gap-6`}>
+            <div className="rounded-lg border p-6 shadow-sm ">
               <h2 className="mb-4 text-xl font-semibold">
                 Voice your Question
               </h2>
@@ -170,6 +192,7 @@ const Index = () => {
                     variant="outline"
                     onClick={saveTranscript}
                     disabled={!transcript}
+                    className={`ml-2 ${themeClass}`}
                   >
                     <Save className=" h-4 w-4" />
                   </Button>
@@ -178,6 +201,7 @@ const Index = () => {
                     variant="outline"
                     onClick={clearTranscript}
                     disabled={!transcript}
+                    className={`ml-2 ${themeClass}`}
                   >
                     <TicketX className=" h-2 w-2" />
                   </Button>
@@ -202,7 +226,7 @@ const Index = () => {
             />
           </div>
 
-          <div className="flex flex-col gap-6">
+          <div className={`flex flex-col gap-6 `}>
             <div className="hidden md:block">
               <AIResponse response={aiResponse} isLoading={isLoading} />
             </div>

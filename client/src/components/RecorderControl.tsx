@@ -1,10 +1,10 @@
-
-import React from "react";
+import React, { useContext } from "react";
 import { Mic, Square, Loader2, ClipboardCopy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { ThemeContext } from "@/context/Theme";
 
 interface RecorderControlProps {
   isRecording: boolean;
@@ -21,6 +21,7 @@ const RecorderControl: React.FC<RecorderControlProps> = ({
   transcript,
   className,
 }) => {
+  const { theme } = useContext(ThemeContext);
   const copyToClipboard = () => {
     if (!transcript) {
       toast("Nothing to copy", {
@@ -43,7 +44,10 @@ const RecorderControl: React.FC<RecorderControlProps> = ({
       }
     );
   };
-
+  const themeClass =
+    theme === "light"
+      ? "bg-gradient-to-b from-gray-50 to-gray-100"
+      : "bg-gray-900 text-white";
   return (
     <div className={cn("flex items-center", className)}>
       {isRecording ? (
@@ -63,7 +67,9 @@ const RecorderControl: React.FC<RecorderControlProps> = ({
         </>
       ) : (
         <>
-          <Badge variant="outline" className="mr-2">Ready</Badge>
+          <Badge variant="outline" className={`mr-2 ${themeClass}`}>
+            Ready
+          </Badge>
           <Button
             variant="default"
             size="icon"
@@ -82,7 +88,7 @@ const RecorderControl: React.FC<RecorderControlProps> = ({
         onClick={copyToClipboard}
         disabled={!transcript}
         aria-label="Copy to clipboard"
-        className="ml-2"
+        className={`ml-2 ${themeClass}`}
       >
         <ClipboardCopy className="h-4 w-4" />
       </Button>
@@ -90,9 +96,7 @@ const RecorderControl: React.FC<RecorderControlProps> = ({
       {isRecording && (
         <div className="flex items-center ml-2 gap-1">
           <Loader2 className="h-4 w-4 animate-spin text-blue-500" />
-          <span className="text-sm text-muted-foreground">
-            Listening...
-          </span>
+          <span className="text-sm text-muted-foreground">Listening...</span>
         </div>
       )}
     </div>
