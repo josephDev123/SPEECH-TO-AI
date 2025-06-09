@@ -8,7 +8,16 @@ export default function SwitchTheme() {
   return (
     <button
       type="button"
-      onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+      onClick={() => {
+        const newTheme = theme === "light" ? "dark" : "light";
+        setTheme(newTheme);
+
+        if (newTheme === "dark") {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.remove("dark");
+        }
+      }}
       className="inline-flex gap-2"
     >
       {theme == "dark" ? <Sun /> : <Moon />}
