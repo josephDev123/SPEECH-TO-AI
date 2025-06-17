@@ -113,7 +113,7 @@ const Index = () => {
         setAiResponse((prev) => prev + chunk);
       });
 
-      toast("AI response received!");
+      toast("All AI response received!");
     } catch (error) {
       console.error("Error getting AI response:", error);
       // const errMsg = AxiosErrorHandler(error);
@@ -127,7 +127,7 @@ const Index = () => {
 
   if (transcript && transcript.includes("send it to AI")) {
     askAI();
-    clearTranscript();
+    // clearTranscript();
     stopRecording();
   }
 

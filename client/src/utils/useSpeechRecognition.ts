@@ -8,8 +8,11 @@ interface SpeechRecognitionResult {
 export const useSpeechRecognition = () => {
   const [isRecording, setIsRecording] = React.useState(false);
   const [transcript, setTranscript] = React.useState("");
+  console.log(transcript);
   const [error, setError] = React.useState<string | null>(null);
   const recognitionRef = React.useRef<any>(null);
+  const [keepRecording, setKeepRecording] = React.useState(false);
+  const transcriptRef = React.useRef("");
 
   React.useEffect(() => {
     // Check if browser supports SpeechRecognition
@@ -21,22 +24,22 @@ export const useSpeechRecognition = () => {
       return;
     }
 
+    setKeepRecording(true);
     const recognition = new SpeechRecognition();
     recognition.continuous = true;
     recognition.interimResults = true;
     recognition.lang = "en-US";
 
-    let fullTranscript = " ";
     recognition.onresult = (event: any) => {
       for (let i = event.resultIndex; i < event.results.length; ++i) {
         const result = event.results[i];
         if (result.isFinal) {
-          fullTranscript += result[0].transcript;
+          transcriptRef.current += result[0].transcript;
         }
       }
 
-      console.log(fullTranscript);
-      setTranscript(fullTranscript);
+      // console.log(fullTranscript);
+      setTranscript(transcriptRef.current);
     };
 
     recognition.onerror = (event: any) => {
@@ -47,7 +50,8 @@ export const useSpeechRecognition = () => {
 
     recognition.onend = () => {
       // Only set recording to false if we didn't intend to keep recording
-      if (recognitionRef.current?.keepRecording !== true) {
+      // if (recognitionRef.current?.keepRecording !== true) {
+      if (keepRecording !== true) {
         setIsRecording(false);
       } else {
         // Restart recording if it ended but we want to keep recording
@@ -67,10 +71,10 @@ export const useSpeechRecognition = () => {
   const startRecording = () => {
     setError(null);
     setIsRecording(true);
-    setTranscript("");
+    // setTranscript("");
 
     try {
-      recognitionRef.current.keepRecording = true;
+      !keepRecording && setKeepRecording(true);
       recognitionRef.current.start();
     } catch (err) {
       console.error("Failed to start recording:", err);
@@ -81,7 +85,8 @@ export const useSpeechRecognition = () => {
 
   const stopRecording = () => {
     if (recognitionRef.current) {
-      recognitionRef.current.keepRecording = false;
+      // recognitionRef.current.keepRecording = false;
+      setKeepRecording(false);
       recognitionRef.current.stop();
       setIsRecording(false);
     }
@@ -89,6 +94,7 @@ export const useSpeechRecognition = () => {
 
   const clearTranscript = () => {
     setTranscript("");
+    transcriptRef.current = "";
   };
 
   return {
