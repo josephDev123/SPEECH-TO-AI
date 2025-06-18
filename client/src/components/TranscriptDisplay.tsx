@@ -1,7 +1,7 @@
-
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useContext } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
+import { ThemeContext } from "@/context/Theme";
 
 interface TranscriptDisplayProps {
   transcript: string;
@@ -19,7 +19,9 @@ const TranscriptDisplay: React.FC<TranscriptDisplayProps> = ({
   // Auto-scroll to bottom when transcript changes
   useEffect(() => {
     if (scrollAreaRef.current) {
-      const scrollElement = scrollAreaRef.current.querySelector('[data-radix-scroll-area-viewport]');
+      const scrollElement = scrollAreaRef.current.querySelector(
+        "[data-radix-scroll-area-viewport]"
+      );
       if (scrollElement) {
         scrollElement.scrollTop = scrollElement.scrollHeight;
       }
@@ -27,8 +29,16 @@ const TranscriptDisplay: React.FC<TranscriptDisplayProps> = ({
   }, [transcript]);
 
   return (
-    <div className={cn("w-full rounded-lg border bg-card p-1", className)}>
-      <ScrollArea ref={scrollAreaRef} className="h-[300px] w-full rounded-md p-4">
+    <div
+      className={cn(
+        `w-full rounded-lg border dark:text-white/80 text-black p-1`,
+        className
+      )}
+    >
+      <ScrollArea
+        ref={scrollAreaRef}
+        className="h-[300px] w-full rounded-md p-4"
+      >
         {transcript ? (
           <p className="text-lg leading-relaxed">
             {transcript}
@@ -36,7 +46,11 @@ const TranscriptDisplay: React.FC<TranscriptDisplayProps> = ({
           </p>
         ) : (
           <div className="flex h-full items-center justify-center text-muted-foreground">
-            <p>{isRecording ? "Speak now..." : "Your transcript will appear here"}</p>
+            <p>
+              {isRecording
+                ? "Speak now..."
+                : "Your transcript will appear here"}
+            </p>
           </div>
         )}
       </ScrollArea>

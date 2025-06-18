@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -38,13 +37,14 @@ const SavedTranscripts: React.FC<SavedTranscriptsProps> = ({
 
   if (transcripts.length === 0) {
     return (
-      <Card>
+      <Card className="dark:bg-black dark:text-white/80 text-black">
         <CardHeader>
           <CardTitle>Saved Transcripts</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-center text-muted-foreground">
-            No saved transcripts yet. Record and save a transcript to see it here.
+            No saved transcripts yet. Record and save a transcript to see it
+            here.
           </p>
         </CardContent>
       </Card>

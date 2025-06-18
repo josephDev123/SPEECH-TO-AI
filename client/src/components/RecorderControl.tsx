@@ -67,7 +67,7 @@ const RecorderControl: React.FC<RecorderControlProps> = ({
         </>
       ) : (
         <>
-          <Badge variant="outline" className={`mr-2 ${themeClass}`}>
+          <Badge variant="outline" className={`mr-2  ${themeClass}`}>
             Ready
           </Badge>
           <Button
@@ -75,7 +75,7 @@ const RecorderControl: React.FC<RecorderControlProps> = ({
             size="icon"
             onClick={onStartRecording}
             aria-label="Start recording"
-            className="h-12 w-12 rounded-full bg-blue-500 hover:bg-blue-600"
+            className="lg:size-10 size-8 rounded-full bg-blue-500 hover:bg-blue-600"
           >
             <Mic className="h-6 w-6" />
           </Button>
@@ -88,7 +88,7 @@ const RecorderControl: React.FC<RecorderControlProps> = ({
         onClick={copyToClipboard}
         disabled={!transcript}
         aria-label="Copy to clipboard"
-        className={`ml-2 ${themeClass}`}
+        className={`ml-2 ${themeClass} lg:size-10 size-8`}
       >
         <ClipboardCopy className="h-4 w-4" />
       </Button>

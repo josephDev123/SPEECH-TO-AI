@@ -30,8 +30,6 @@ const Index = () => {
   const [aiResponse, setAiResponse] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { theme } = useContext(ThemeContext);
-
   // Load saved transcripts from localStorage on component mount
   useEffect(() => {
     const savedItems = localStorage.getItem("savedTranscripts");
@@ -144,7 +142,7 @@ const Index = () => {
         </a>
         <SwitchTheme />
       </div>
-      <div className="container mx-auto px-4 py-8 md:py-12">
+      <div className="container mx-auto px-4 w-full  py-8 md:py-12">
         <header className="mb-8 text-center">
           <h1 className={`text-3xl font-bold tracking-tight md:text-4xl`}>
             Speed(Voice) to AI
@@ -154,9 +152,9 @@ const Index = () => {
           </p>
         </header>
 
-        <div className={`grid gap-8 md:grid-cols-2  `}>
+        <div className={`grid gap-8 md:grid-cols-2 grid-cols-1`}>
           <div className={`flex flex-col gap-6`}>
-            <div className="rounded-lg border p-6 shadow-sm ">
+            <div className="rounded-lg border sm:p-6 p-2 shadow-sm ">
               <h2 className="mb-4 text-xl font-semibold">
                 Voice your Question
               </h2>
@@ -184,7 +182,7 @@ const Index = () => {
                     variant="outline"
                     onClick={saveTranscript}
                     disabled={!transcript}
-                    className={`ml-2 `}
+                    className={`ml-2 lg:size-10 size-8`}
                   >
                     <Save className=" h-4 w-4" />
                   </Button>
@@ -193,7 +191,7 @@ const Index = () => {
                     variant="outline"
                     onClick={clearTranscript}
                     disabled={!transcript}
-                    className={`ml-2 `}
+                    className={`ml-2 lg:size-10 size-8`}
                   >
                     <TicketX className=" h-2 w-2" />
                   </Button>

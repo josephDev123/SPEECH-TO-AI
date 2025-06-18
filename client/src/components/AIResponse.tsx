@@ -16,7 +16,12 @@ const AIResponse: React.FC<AIResponseProps> = ({
   className,
 }) => {
   return (
-    <Card className={cn("w-full", className)}>
+    <Card
+      className={cn(
+        "w-full dark:bg-black dark:text-white/80 text-black",
+        className
+      )}
+    >
       <CardHeader>
         <CardTitle className="text-xl">AI Response</CardTitle>
       </CardHeader>
