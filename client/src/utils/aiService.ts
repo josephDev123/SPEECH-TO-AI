@@ -1,8 +1,6 @@
 // This is a simple mock AI service for demo purposes
 // In a real app, you would connect this to an actual AI API like OpenAI
 
-import { on } from "events";
-
 export const getAIResponse = async (
   question: string,
   onChuck: (value: string) => void
@@ -51,6 +49,10 @@ export const getAIResponse = async (
     }
   } catch (error) {
     console.error("Error fetching AI response:", error);
-    throw new Error(error.message || "Failed to fetch AI response");
+    if (error instanceof Error) {
+      throw new Error(error.message || "Failed to fetch AI response");
+    } else {
+      throw new Error("Failed to fetch AI response");
+    }
   }
 };

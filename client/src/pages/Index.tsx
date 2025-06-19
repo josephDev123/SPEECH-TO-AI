@@ -114,20 +114,26 @@ const Index = () => {
       toast("All AI response received!");
     } catch (error) {
       console.error("Error getting AI response:", error);
-      // const errMsg = AxiosErrorHandler(error);
+      const errMessage =
+        error instanceof Error
+          ? error.message
+          : typeof error === "string"
+          ? error
+          : "Something went wrong";
+
       toast("Failed to get AI response", {
-        description: error?.message,
+        description: errMessage,
       });
     } finally {
       setIsLoading(false);
     }
   };
 
-  if (transcript && transcript.includes("send it to AI")) {
-    askAI();
-    // clearTranscript();
-    stopRecording();
-  }
+  // if (transcript && transcript.includes("send it to AI")) {
+  //   askAI();
+  //   // clearTranscript();
+  //   stopRecording();
+  // }
 
   return (
     <div className={`min-h-screen dark:bg-black dark:text-white text-black `}>
@@ -163,12 +169,30 @@ const Index = () => {
                 isRecording={isRecording}
                 className="mb-4"
               />
-              <p className="text-sm text-green-600 mb-2">
+              {/* <p className="text-sm text-green-600 mb-2">
                 <b className="text-red-400 font-bold border-b mr-1 border-b-red-300">
                   Notice:
                 </b>
                 Say <b>'send it to AI'</b> in transcript to get a response
-              </p>
+              </p> */}
+
+              <button
+                onClick={() => {
+                  if (!transcript.trim()) {
+                    toast("Nothing to ask", {
+                      description: "Record a question first!",
+                    });
+                    return;
+                  }
+                  askAI();
+                  // clearTranscript();
+                  stopRecording();
+                }}
+                type="button"
+                className="rounded-md text-sm bg-green-500 px-2 py-1 text-white hover:bg-green-400 focus:outline-none focus:ring-1 focus:ring-green-400 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Send
+              </button>
               <div className="flex items-center justify-between ">
                 <RecorderControl
                   isRecording={isRecording}
