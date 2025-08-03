@@ -12,7 +12,7 @@ export interface options {
 (async function Main() {
   const options: options = {
     config,
-    clientGtp: gptClient(config.CHATGPT_SECRET, config.OPENAI_BASEURL),
+    clientGtp: gptClient(config.OPENAI_API_KEY, config.OPENAI_BASEURL),
   };
 
   App(options)
