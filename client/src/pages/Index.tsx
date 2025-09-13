@@ -142,7 +142,7 @@ const Index = () => {
           href="https://buymeacoffee.com/josephdev"
           target="_blank"
           rel="noopener noreferrer"
-          className="w-28  "
+          className="w-28"
         >
           <img src={"/buymeCoffee.png"} alt="" className="" />
         </a>
