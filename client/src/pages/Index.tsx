@@ -148,7 +148,7 @@ const Index = () => {
           <img src={"/buymeCoffee.png"} alt="" className="" />
         </a>
         <div className="inline-flex gap-2 items-center">
-          <Link to="/ai-agent-chat-tool">AI-Agent-Chat-tool</Link>
+          {/* <Link to="/ai-agent-chat-tool">AI-Agent-Chat-tool</Link> */}
           <SwitchTheme />
         </div>
       </div>
