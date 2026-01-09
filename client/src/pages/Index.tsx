@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -14,6 +14,7 @@ import { Save, Send, TicketX } from "lucide-react";
 import { getAIResponse } from "@/utils/aiService";
 import SwitchTheme from "@/components/SwitchTheme";
 import { ThemeContext } from "@/context/Theme";
+import { Link } from "react-router-dom";
 
 const Index = () => {
   const {
@@ -137,7 +138,7 @@ const Index = () => {
 
   return (
     <div className={`min-h-screen dark:bg-black dark:text-white text-black `}>
-      <div className="flex justify-between p-4">
+      <div className="flex justify-between p-4 ">
         <a
           href="https://buymeacoffee.com/josephdev"
           target="_blank"
@@ -146,7 +147,10 @@ const Index = () => {
         >
           <img src={"/buymeCoffee.png"} alt="" className="" />
         </a>
-        <SwitchTheme />
+        <div className="inline-flex gap-2 items-center">
+          <Link to="/ai-agent-chat-tool">AI-Agent-Chat-tool</Link>
+          <SwitchTheme />
+        </div>
       </div>
       <div className="container mx-auto px-4 w-full  py-8 md:py-12">
         <header className="mb-8 text-center">
